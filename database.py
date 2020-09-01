@@ -14,6 +14,7 @@ class Records(Base):
     id = Column(Integer, primary_key=True)
     year = Column(Integer)
     team = Column(String)
+    league = Column(String)
     wins = Column(Integer)
     losses = Column(Integer)
     org_founded = Column(Integer)

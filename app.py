@@ -1,6 +1,14 @@
 import requests
 from bs4 import BeautifulSoup
 from requests_html import HTMLSession
+import sqlalchemy as alchemy
+from sqlalchemy import MetaData, insert, create_engine, Table
+from database import Records
+
+engine = create_engine("sqlite:///app.db")
+# engine.echo = True
+Session = alchemy.orm.sessionmaker(bind=engine)
+session = Session()
 
 session = HTMLSession()
 year = str(1986)
@@ -11,11 +19,45 @@ print(r)
 
 soup = BeautifulSoup(r.content, 'html.parser')
 
-results = soup.find(id="expanded_standings_overall")
+table = soup.find(id="expanded_standings_overall")
 
-f = open("view.html", "w")
-f.write(results.prettify())
-f.close()
+# print(table.findAll("tr")[0])
+# print(table.findAll("tr")[1]("td")[0].get_text())
+
+# record_instance = Records(
+#     year=int(year)
+#     team=)
+
+counter = 0
+# while counter < 2:
+for row in table.findAll("tr"):
+    # for cell in row("td"):
+    #     print(cell.get_text())
+    if row("td") != []:
+        new_record = Records(
+            year=int(year),
+            team=row("td")[0].get_text(),
+            league=row("td")[1].get_text(),
+            wins=row("td")[2].get_text(),
+            losses=row("td")[3].get_text()
+        )
+        print(new_record.year)
+        print(new_record.team)
+        print(new_record.league)
+        print(new_record.wins)
+        print(new_record.losses)
+        break
+
+
+# print(row("td"))
+# break
+# for cell in row("td"):
+# print(cell.get_text().strip())
+
+
+# f = open("view.html", "w")
+# f.write(results.prettify())
+# f.close()
 
 # 2020_record = results.find_all('section', class_='')
 # print(results.prettify())
