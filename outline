@@ -1,0 +1,13 @@
+Do pre-expansion teams continue to win more consistently than expansion teams even after any effects of expansion should have worn off? 
+
+	Define expansion team:
+
+	When does expansion effect wear off?
+		Is there a relationship between the number of years a team has existed and its expected win percentage?
+		Limit to first 10? 15? years
+			Any team that's existed for any amount of time can still lose an ungodly amount of games but I hypothesise that a new team should be more expected to lose an ungodly amount
+		Time to first winning season? First playoff berth?
+
+	Collect all win-lose records - web scraping
+	Create table:
+		Team (name), year, wins, losses, age of org, expansion org y/n
