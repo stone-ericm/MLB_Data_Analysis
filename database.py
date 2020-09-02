@@ -13,12 +13,26 @@ class Records(Base):
 
     id = Column(Integer, primary_key=True)
     year = Column(Integer)
-    team = Column(String)
+    team_id = Column(String)
     league = Column(String)
     wins = Column(Integer)
     losses = Column(Integer)
     org_founded = Column(Integer)
     expansion = Column(Boolean)
+
+
+class Franchises(Base):
+    __tablename__ = 'franchises'
+
+    id = Column(Integer, primary_key=True)
+    team_id = Column(String, ForeignKey('records.team_id'))
+
+
+class Alt_Names(Base):
+    __tablename__ = 'alt_names'
+
+    alternate_name = Column(String, primary_key=True)
+    team_id = Column(String, ForeignKey('records.team_id'))
 
 
 if __name__ == "__main__":
