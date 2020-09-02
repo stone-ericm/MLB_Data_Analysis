@@ -1,4 +1,4 @@
-if input("Running this will clear the database. Are you sure you want to proceed? (Y/N)").lower() == "y":
+if input("Running this will clear the database. Are you sure you want to proceed? (Y/N)\n").lower() == "y":
     pass
 else:
     quit()
