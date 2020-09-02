@@ -1,7 +1,15 @@
+if input("Running this will clear the database. Are you sure you want to proceed? (Y/N)").lower() == "y":
+    pass
+else:
+    quit()
+
+
 import sqlalchemy as alchemy
 from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, ForeignKeyConstraint, Boolean
 from sqlalchemy.ext.declarative import declarative_base
-
+import os
+if os.path.isfile("app.db"):
+    os.remove("app.db")
 Base = declarative_base()
 engine = create_engine('sqlite:///app.db')
 
@@ -21,11 +29,11 @@ class Records(Base):
     expansion = Column(Boolean)
 
 
-class Franchises(Base):
-    __tablename__ = 'franchises'
+# class Franchises(Base):
+#     __tablename__ = 'franchises'
 
-    id = Column(Integer, primary_key=True)
-    team_id = Column(String, ForeignKey('records.team_id'))
+#     id = Column(Integer, primary_key=True)
+#     team_id = Column(String, ForeignKey('records.team_id'))
 
 
 class Alt_Names(Base):
