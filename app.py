@@ -19,21 +19,27 @@ for expansion teams
 What's the average number of years before an expansion team has a .500+ record?
 '''
 team_ids = []
+team_records = {}
 franchise_objects = alc_session.query(Franchises).all()
 for each in franchise_objects:
     team_ids.append(each.team_id)
 for team in team_ids:
-    team_records = alc_session.query(Records).filter_by(team_id=team).all()
+    print(team)
+    team_records[team] = alc_session.query(
+        Records).filter_by(team_id=team).all()
 # team_records in each loop contains the records for one respective team as an instance of Records
-    years_in_operation = len(team_records)
+    # years_in_operation = len(team_records)
     # print(years_in_operation)
-    collective_win_percentages = []
-    for each in team_records:
+len(team_records)
+print(team_records)
+collective_win_percentages = []
+for i, each in team_records:
+    for each in each:
         win_percent = each.wins / (each.losses + each.wins)
-        # print(win_percent)
-        collective_win_percentages.append(win_percent)
-    average_season = mean(collective_win_percentages)
-    print("The average win percentage for {} is {:.3f}".format(team, average_season))
+    # print(win_percent)
+    collective_win_percentages.append(win_percent)
+average_season = mean(collective_win_percentages)
+print("The average win percentage for {} is {:.3f}".format(team, average_season))
 
 # session = HTMLSession()
 # year = str(2020)
