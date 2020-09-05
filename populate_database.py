@@ -8,8 +8,8 @@ Session = alchemy.orm.sessionmaker(bind=engine)
 session = Session()
 html_session = HTMLSession()
 
-URL_1 = "https://widgets.sports-reference.com/wg.fcgi?css=1&site=br&url=%2Fleagues%2FMLB%2F"
-URL_2 = "-standings.shtml&div=div_expanded_standings_overall&del_col=1,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30"
+URL = "https://widgets.sports-reference.com/wg.fcgi?css=1&site=br&url=%2Fleagues%2FMLB%2F{}-standings.shtml&div=div_expanded_standings_overall&del_col=1,4,7,8,9,10,11,12,13,14,15,16,17,18,19,20,21,22,23,24,25,26,27,28,29,30"
+
 
 alt_names = {}
 an = open("alt_names", "r")
@@ -28,6 +28,11 @@ for line in reader:
     additional_info[line[0].strip()] = [int(line[1]), bool(int(line[2]))]
 ai.close()
 
+modern_names = []
+mn = open("modern_names", "r")
+for line in mn:
+    modern_names.append(line.strip())
+
 '''
 
 requested info comes in the following order:
@@ -37,8 +42,8 @@ PIT, NL, WINS, LOSSES
 '''
 
 for year in range(1901, 2020):
-    URL = URL_1 + str(year) + URL_2
-    r = html_session.get(URL)
+    # URL = URL_1 + str(year) + URL_2
+    r = html_session.get(URL.format(str(year)))
     soup = BeautifulSoup(r.content, 'html.parser')
     table = soup.find(id='expanded_standings_overall')
     for row in table.findAll("tr"):
@@ -61,5 +66,11 @@ for year in range(1901, 2020):
                 )
                 session.add(new_record)
     print(year)
+
+for team_id in modern_names:
+    new_team = Franchises(
+        team_id=team_id
+    )
+    session.add(new_team)
 
 session.commit()

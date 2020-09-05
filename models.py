@@ -18,15 +18,15 @@ class Records(Base):
     expansion = Column(Boolean)
 
 
-# class Franchises(Base):
-#     __tablename__ = 'franchises'
+class Franchises(Base):
+    __tablename__ = 'franchises'
 
-#     id = Column(Integer, primary_key=True)
-#     team_id = Column(String, ForeignKey('records.team_id'))
-
-
-class Alt_Names(Base):
-    __tablename__ = 'alt_names'
-
-    alternate_name = Column(String, primary_key=True)
+    id = Column(Integer, primary_key=True)
     team_id = Column(String, ForeignKey('records.team_id'))
+
+
+# class Alt_Names(Base):
+#     __tablename__ = 'alt_names'
+
+#     alternate_name = Column(String, primary_key=True)
+#     team_id = Column(String, ForeignKey('records.team_id'))
