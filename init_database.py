@@ -19,13 +19,15 @@ engine = create_engine('postgresql://postgres:password@localhost/MLB_app')
 
 metadata = MetaData()
 
-with contextlib.closing(engine.connect()) as con:
-    trans = con.begin()
-    for table in reversed(metadata.sorted_tables):
-        con.execute(table.delete())
-    trans.commit()
+# Base.metadata.drop_all(engine)
 
 from models import *
+if engine.dialect.has_table(engine, 'records'):
+    Records.__table__.drop(engine)
+if engine.dialect.has_table(engine, 'franchises'):
+    Franchises.__table__.drop(engine)
+if engine.dialect.has_table(engine, 'annual_avgs'):
+    Annual_Expansion_And_Non_Record.__table__.drop(engine)
 
 
 if __name__ == "__main__":

@@ -1,13 +1,14 @@
 # import requests
 # from bs4 import BeautifulSoup
 # from requests_html import HTMLSession
+from models import *
 import sqlalchemy as alchemy
 from sqlalchemy import MetaData, insert, create_engine, Table
 from sqlalchemy.orm import load_only
 from models import Records, Franchises
 from statistics import mean
 
-engine = create_engine("sqlite:///app.db")
+engine = create_engine("postgresql://postgres:password@localhost/MLB_app")
 # engine.echo = True
 Session = alchemy.orm.sessionmaker(bind=engine)
 alc_session = Session()
@@ -104,8 +105,15 @@ def annual_expansion_and_non_record():
                 collective_win_percentages_exp.append(win_percent)
             else:
                 collective_win_percentages_non_exp.append(win_percent)
-        print("The average win percentage for a non-expansion team in {} was {:.3f}.\nThe average win percentage for an expansion team in that year was {:.3f}.".format(
-            year, mean(collective_win_percentages_non_exp), mean(collective_win_percentages_exp)))
+        row = Annual_Expansion_And_Non_Record(
+            year=year,
+            non_exp=mean(collective_win_percentages_non_exp),
+            exp=mean(collective_win_percentages_exp)
+        )
+        session.add(row)
+    session.commit()
+    # print("The average win percentage for a non-expansion team in {} was {:.3f}.\nThe average win percentage for an expansion team in that year was {:.3f}.".format(
+    # year, mean(collective_win_percentages_non_exp), mean(collective_win_percentages_exp)))
 
 
 print(annual_expansion_and_non_record())

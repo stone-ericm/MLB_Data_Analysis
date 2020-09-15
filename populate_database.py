@@ -2,6 +2,7 @@ from bs4 import BeautifulSoup
 from requests_html import HTMLSession
 import csv
 from models import *
+from statistics import mean
 
 
 def populate_database():
@@ -46,11 +47,11 @@ def populate_database():
 
     '''
 
-	requested info comes in the following order:
-	PIT, NL, WINS, LOSSES
+    requested info comes in the following order:
+    PIT, NL, WINS, LOSSES
 
 
-	'''
+    '''
 
     for year in range(1901, 2020):
         # URL = URL_1 + str(year) + URL_2
@@ -79,6 +80,44 @@ def populate_database():
                     session.add(new_record)
         print(year)
 
+    session.commit()
+
+    for year in range(1961, 2020):
+        records = session.query(Records)
+        collective_win_percentages_exp = []
+        collective_win_percentages_non_exp = []
+        team_records = records.join(Franchises).filter(
+            Records.year == year).all()
+        for each in team_records:
+            win_percent = each.wins / (each.losses + each.wins)
+            if each.franchise.expansion == True:
+                collective_win_percentages_exp.append(win_percent)
+            else:
+                collective_win_percentages_non_exp.append(win_percent)
+        print(collective_win_percentages_exp)
+        print(collective_win_percentages_non_exp)
+        row = Annual_Expansion_And_Non_Record(
+            year=year,
+            non_exp=mean(collective_win_percentages_non_exp),
+            exp=mean(collective_win_percentages_exp)
+        )
+        session.add(row)
+    session.commit()
+
+    for team in modern_names:
+        records = session.query(Records)
+        annual_records = records.filter(Records.team_id == team).all()
+        collective_win_percentages = []
+        # print(annual_records)
+        for each in annual_records:
+            win_percent = each.wins / (each.losses + each.wins)
+            collective_win_percentages.append(win_percent)
+        average_season = mean(collective_win_percentages)
+        row = Average_Record_By_Team(
+            team_id=team,
+            win_pct=average_season
+        )
+        session.add(row)
     session.commit()
 
 
