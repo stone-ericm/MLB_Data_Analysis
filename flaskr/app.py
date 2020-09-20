@@ -105,11 +105,18 @@ def annual_expansion_and_non_record():
                 collective_win_percentages_exp.append(win_percent)
             else:
                 collective_win_percentages_non_exp.append(win_percent)
-        print("The average win percentage for a non-expansion team in {} was {:.3f}.\nThe average win percentage for an expansion team in that year was {:.3f}.".format(
-            year, mean(collective_win_percentages_non_exp), mean(collective_win_percentages_exp)))
+        row = Annual_Expansion_And_Non_Record(
+            year=year,
+            non_exp=mean(collective_win_percentages_non_exp),
+            exp=mean(collective_win_percentages_exp)
+        )
+        session.add(row)
+    session.commit()
+    # print("The average win percentage for a non-expansion team in {} was {:.3f}.\nThe average win percentage for an expansion team in that year was {:.3f}.".format(
+    # year, mean(collective_win_percentages_non_exp), mean(collective_win_percentages_exp)))
 
 
-print(average_expansion_and_non_record())
+print(annual_expansion_and_non_record())
 
 # Is having a worse winning percentage coorelated with being expansion?
 # Do expansion teams have winning seasons at the same rate as originals?

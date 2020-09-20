@@ -22,13 +22,18 @@ metadata = MetaData()
 # Base.metadata.drop_all(engine)
 
 from models import *
-if engine.dialect.has_table(engine, 'records'):
-    Records.__table__.drop(engine)
-if engine.dialect.has_table(engine, 'franchises'):
-    Franchises.__table__.drop(engine)
-if engine.dialect.has_table(engine, 'annual_avgs'):
-    Annual_Expansion_And_Non_Record.__table__.drop(engine)
+# if engine.dialect.has_table(engine, 'annual_avgs'):
+#     Annual_Expansion_And_Non_Record.__table__.drop(engine)
+# if engine.dialect.has_table(engine, 'average_record_by_team'):
+#     Average_Record_By_Team.__table__.drop(engine)
+# if engine.dialect.has_table(engine, 'records'):
+#     Records.__table__.drop(engine)
+# if engine.dialect.has_table(engine, 'franchises'):
+#     Franchises.__table__.drop(engine)
+# if engine.dialect.has_table(engine, 'annual_avgs'):
+#     Annual_Expansion_And_Non_Record.__table__.drop(engine)
 
 
 if __name__ == "__main__":
+    Base.metadata.drop_all(engine)
     Base.metadata.create_all(engine)
