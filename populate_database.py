@@ -3,6 +3,7 @@ from requests_html import HTMLSession
 import csv
 from models import *
 from statistics import mean
+from datetime import datetime
 
 
 def populate_database():
@@ -53,7 +54,7 @@ def populate_database():
 
     '''
 
-    for year in range(1901, 2020):
+    for year in range(1901, 2021):
         # URL = URL_1 + str(year) + URL_2
         r = html_session.get(URL.format(str(year)))
         soup = BeautifulSoup(r.content, 'html.parser')
@@ -68,7 +69,7 @@ def populate_database():
                     wins = row("td")[2].get_text()
                     losses = row("td")[3].get_text()
                     new_record = Records(
-                        year=year,
+                        year=datetime.strptime(str(year), '%Y'),
                         team_id=team_id,
                         league=league,
                         wins=wins,
@@ -82,22 +83,22 @@ def populate_database():
 
     session.commit()
 
-    for year in range(1961, 2020):
+    for year in range(1961, 2021):
         records = session.query(Records)
         collective_win_percentages_exp = []
         collective_win_percentages_non_exp = []
         team_records = records.join(Franchises).filter(
-            Records.year == year).all()
+            Records.year == datetime.strptime(str(year), '%Y')).all()
         for each in team_records:
             win_percent = each.wins / (each.losses + each.wins)
             if each.franchise.expansion == True:
                 collective_win_percentages_exp.append(win_percent)
             else:
                 collective_win_percentages_non_exp.append(win_percent)
-        print(collective_win_percentages_exp)
-        print(collective_win_percentages_non_exp)
+        # print(collective_win_percentages_exp)
+        # print(collective_win_percentages_non_exp)
         row = Annual_Expansion_And_Non_Record(
-            year=year,
+            year=datetime.strptime(str(year), '%Y'),
             non_exp=mean(collective_win_percentages_non_exp),
             exp=mean(collective_win_percentages_exp)
         )
@@ -116,6 +117,39 @@ def populate_database():
         row = Average_Record_By_Team(
             team_id=team,
             win_pct=average_season
+        )
+        session.add(row)
+    session.commit()
+
+    ws_winners = {}
+    ws = open("WS_winners", "r")
+    reader = csv.reader(ws)
+    for line in reader:
+        ws_winners[int(line[0])] = line[1].strip()
+    ws.close()
+
+    for year in list(ws_winners.keys()):
+        row = World_Series_Winners(
+            year=datetime.strptime(str(year), '%Y'),
+            winner=ws_winners[year]
+        )
+        session.add(row)
+    session.commit()
+
+    elo_csv = open("mlb_elo.csv", "r")
+    reader = csv.reader(elo_csv)
+    next(reader)
+    for line in reader:
+        row = ELO(
+            date=datetime.strptime(str(line[0]), '%Y-%m-%d'),
+            team=line[4],
+            elo=line[10]
+        )
+        session.add(row)
+        row = ELO(
+            date=datetime.strptime(str(line[0]), '%Y-%m-%d'),
+            team=line[5],
+            elo=line[11]
         )
         session.add(row)
     session.commit()

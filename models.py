@@ -1,5 +1,5 @@
 import sqlalchemy as alchemy
-from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, ForeignKeyConstraint, Boolean, Float
+from sqlalchemy import create_engine, Table, Column, Integer, String, MetaData, ForeignKey, ForeignKeyConstraint, Boolean, Float, DateTime
 from sqlalchemy.orm import relationship
 from sqlalchemy.ext.declarative import declarative_base
 
@@ -19,7 +19,7 @@ class Records(Base):
     __tablename__ = 'records'
 
     id = Column(Integer, primary_key=True)
-    year = Column(Integer)
+    year = Column(DateTime)
     team_id = Column(String, ForeignKey("franchises.team_id"))
     league = Column(String)
     wins = Column(Integer)
@@ -31,7 +31,7 @@ class Records(Base):
 class Annual_Expansion_And_Non_Record(Base):
     __tablename__ = 'annual_avgs'
 
-    year = Column(Integer, primary_key=True)
+    year = Column(DateTime, primary_key=True)
     non_exp = Column(Float)
     exp = Column(Float)
 
@@ -42,8 +42,23 @@ class Average_Record_By_Team(Base):
     team_id = Column(String, ForeignKey(
         "franchises.team_id"), primary_key=True)
     win_pct = Column(Float)
+
+
+class World_Series_Winners(Base):
+    __tablename__ = 'world_series_winners'
+
+    year = Column(DateTime, primary_key=True)
+    winner = Column(String)
 # class Alt_Names(Base):
 #     __tablename__ = 'alt_names'
 
 #     alternate_name = Column(String, primary_key=True)
 #     team_id = Column(String, ForeignKey('records.team_id'))
+
+class ELO(Base):
+    __tablename__ = "ELO"
+
+    id = Column(Integer, primary_key=True)
+    date = Column(DateTime)
+    team = Column(String)
+    elo = Column(Float)
